@@ -3,36 +3,36 @@ import java.util.Scanner;
 public class Disc{
 
     private int numberOfDiscs;
-    private String sequence;
+    private String data;
 
-    public Disc(int numberOfDiscs, String sequence) {
+    public Disc(int numberOfDiscs, String data) {
         this.numberOfDiscs = numberOfDiscs;
-        this.sequence = sequence;
+        this.data = data;
     }
 
     public int getNumberOfDiscs() {
         return numberOfDiscs;
     }
-    public String getSequence() {
-        return sequence;
+    public String getData() {
+        return data;
     }
 
 
-    public static String bitSequence(){
+    public static String bitData(){
         Scanner scanner = new Scanner(System.in);
-        String sequence="";
+        String data="";
         while (true) {
             System.out.println("Please insert bit sequence you want to save in a RAID5 data storage");
-            sequence = scanner.nextLine();
+            data = scanner.nextLine();
 
-            if (sequence.matches("1[01]+")) {
-                System.out.println("Sequence accepted: " + sequence);
+            if (data.matches("1[01]+")) {
+                System.out.println("Sequence accepted: " + data);
                 break;
             } else {
                 System.out.println("Invalid sequence. The sequence must start with 1. Please try again.");
             }
         }
-        return sequence;
+        return data;
     }
 
     public static int numOfDiscs(){
