@@ -17,60 +17,22 @@ public class Cluster{
     }
 
     public static void sumControl(List<List<Boolean>> listOfDiscs) {
-        int parityDiskIndex = listOfDiscs.size() - 1;
+        int numberOfDiscs = listOfDiscs.size();
         int dataSize = listOfDiscs.get(0).size();
+        int skipIndex = numberOfDiscs - 1;
+        boolean decrementing = true;
 
         for (int i = 0; i < dataSize; i++) {
             boolean parityBit = false;
-
-            for (int j = 0; j < listOfDiscs.size() - 1; j++) {
-                boolean dataBit = listOfDiscs.get(j).get(i);
-                parityBit ^= dataBit;
-            }
-            parityBit = !parityBit;
-
-
-            listOfDiscs.get(parityDiskIndex).add(parityBit);
-        }
-    }
-
-
-    public static void saveData(List<Boolean> list, List<List<Boolean>> listOfDiscs) {
-        int numberOfDiscs = listOfDiscs.size();
-        int dataLength = list.size();
-        int totalLength = dataLength + (numberOfDiscs - 1 - (dataLength % (numberOfDiscs - 1)));
-
-
-        for (int i = dataLength; i < totalLength; i++) {
-            list.add(false);
-        }
-
-        int currentIndex = 0;
-        int iteration = 0;
-
-        boolean decrementing = true;
-
-        int skipIndex = numberOfDiscs - 1;
-
-        while (currentIndex < totalLength) {
-            int currentIterationStartIndex = currentIndex;
-
-            for (int i = 0; i < numberOfDiscs; i++) {
-                if (i == skipIndex) {
-                    listOfDiscs.get(i).add(false);
-                } else {
-                    if (currentIndex < totalLength) {
-                        Boolean bit = list.get(currentIndex);
-                        listOfDiscs.get(i).add(bit);
-                        currentIndex++;
-                    }
+            for (int j = 0; j < numberOfDiscs; j++) {
+                if (j != skipIndex) {
+                    boolean dataBit = listOfDiscs.get(j).get(i);
+                    parityBit ^= dataBit;
+                    parityBit = !parityBit;
                 }
             }
-            if (currentIndex == currentIterationStartIndex) {
-                break;
-            }
+            listOfDiscs.get(skipIndex).set(i, parityBit);
 
-            iteration++;
             if (decrementing) {
                 skipIndex--;
                 if (skipIndex < 0) {
@@ -85,14 +47,62 @@ public class Cluster{
                 }
             }
         }
+    }
 
-        if (list.size() % listOfDiscs.size() == 0) {
-            for(List<Boolean> disc : listOfDiscs){
-                disc.remove(disc.size()-1);
+    public static void saveData(List<Boolean> list, List<List<Boolean>> listOfDiscs) {
+        int numberOfDiscs = listOfDiscs.size();
+        int dataLength = list.size();
+        int dataLength2 = list.size();
+        int totalLength = dataLength + (numberOfDiscs - 1 - (dataLength % (numberOfDiscs - 1)));
+
+        for (int i = dataLength; i < totalLength; i++) {
+            list.add(false);
+        }
+
+        int currentIndex = 0;
+        boolean decrementing = true;
+        int skipIndex = numberOfDiscs - 1;
+
+        while (currentIndex < totalLength) {
+            int currentIterationStartIndex = currentIndex;
+            for (int i = 0; i < numberOfDiscs; i++) {
+                if (i == skipIndex) {
+                    listOfDiscs.get(i).add(false);
+                } else {
+                    if (currentIndex < totalLength) {
+                        Boolean bit = list.get(currentIndex);
+                        listOfDiscs.get(i).add(bit);
+                        currentIndex++;
+                    }
+                }
+            }
+
+            if (currentIndex == currentIterationStartIndex) {
+                break;
+            }
+            //alg do przechodzenia dla sumie kontr
+            if (decrementing) {
+                skipIndex--;
+                if (skipIndex < 0) {
+                    skipIndex = 1;
+                    decrementing = false;
+                }
+            } else {
+                skipIndex++;
+                if (skipIndex >= numberOfDiscs) {
+                    skipIndex = numberOfDiscs - 2;
+                    decrementing = true;
+                }
+            }
+
+        }
+        if (dataLength2 % (listOfDiscs.size() -1) == 0) {
+            for (List<Boolean> disc : listOfDiscs) {
+                disc.remove(disc.size() - 1);
             }
         }
 
-        //sumControl(listOfDiscs);
+        sumControl(listOfDiscs);
     }
 
 
