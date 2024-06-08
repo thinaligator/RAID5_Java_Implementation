@@ -2,21 +2,44 @@ import java.util.Scanner;
 
 public class Disc{
 
-    private int numberOfDiscs;
+    private static int numberOfDiscs;
     private String data;
+    private int discIndex;
 
     public Disc(int numberOfDiscs, String data) {
-        this.numberOfDiscs = numberOfDiscs;
+        Disc.numberOfDiscs = numberOfDiscs;
         this.data = data;
+
     }
 
-    public int getNumberOfDiscs() {
-        return numberOfDiscs;
+    public Disc(int discIndex){
+        this.discIndex=discIndex;
     }
+    public int getNumberOfDiscs() { return numberOfDiscs; }
     public String getData() {
         return data;
     }
+    public int getDamagedDiscIndex() {
+        return discIndex;
+    }
+    public static int damagedDiscIndex(){
+        Scanner scanner = new Scanner(System.in);
+        String data="";
+        String regex = ("[0-"+ (Disc.numberOfDiscs-1)+"]");
+        while (true) {
+            System.out.println("Please insert damaged disc's index in RAID5 data storage");
+            data = scanner.nextLine();
 
+            if (data.matches(regex)) {
+                System.out.println("Index of damaged disc: " + data);
+                break;
+            } else {
+                System.out.println("Invalid disc's index. Choose between 0 and "+(Disc.numberOfDiscs-1)+". Please try again.");
+            }
+        }
+        int discIndex = Integer.parseInt(data);
+        return discIndex;
+    }
 
     public static String bitData(){
         Scanner scanner = new Scanner(System.in);
@@ -37,19 +60,19 @@ public class Disc{
 
     public static int numOfDiscs(){
         Scanner scanner = new Scanner(System.in);
-        String stringNumberOfDiscs="";
+        String data="";
         while (true) {
             System.out.println("Please insert number of discs you want to use in a RAID5 data storage");
-            stringNumberOfDiscs = scanner.nextLine();
+            data = scanner.nextLine();
 
-            if (stringNumberOfDiscs.matches("[3-9]")){
-                System.out.println("Number of discs accepted: " + stringNumberOfDiscs);
+            if (data.matches("[3-9]")){
+                System.out.println("Number of discs: " + data);
                 break;
             } else {
-                System.out.println("Invalid number of discs. Minimum value is 3, maximum value is 9. Please try again.");
+                System.out.println("Invalid number of discs. Choose between 3 and 9. Please try again.");
             }
         }
-        int number = Integer.parseInt(stringNumberOfDiscs);
+        int number = Integer.parseInt(data);
         return number;
     }
 
